@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CP Grid Visualizer</title>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #0b1121;
+            --panel-bg: #151e32;
+            --input-bg: #0f172a;
+            --text-main: #e2e8f0;
+            --text-muted: #94a3b8;
+            --accent-primary: #38bdf8;
+            --accent-glow: rgba(56, 189, 248, 0.4);
+            --accent-secondary: #818cf8;
+            --danger: #f43f5e;
+            --warning: #f59e0b;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+            font-family: 'Inter', sans-serif;
+        }
+
+        /* --- SIDEBAR --- */
+        .sidebar {
+            width: 320px;
+            background-color: var(--panel-bg);
+            padding: 25px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            box-shadow: 4px 0 20px rgba(0,0,0,0.4);
+            z-index: 10;
+            border-right: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .brand {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: white;
+            letter-spacing: -0.5px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .brand span { color: var(--accent-primary); }
+
+        .input-card {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.05);
+            padding: 15px;
+            border-radius: 12px;
+        }
+
+        .input-label {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+            display: block;
+            font-weight: 600;
+        }
+
+        .coord-row { display: flex; gap: 10px; margin-bottom: 12px; }
+        .input-group { position: relative; flex: 1; }
+
+        .input-group input {
+            width: 100%;
+            background: var(--input-bg);
+            border: 1px solid #334155;
+            color: var(--accent-primary);
+            padding: 12px 12px 12px 30px;
+            border-radius: 8px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1rem;
+            outline: none;
+            transition: all 0.2s ease;
+        }
+
+        .input-group span {
+            position: absolute;
+            left: 10px; top: 50%; transform: translateY(-50%);
+            color: #64748b; font-family: 'JetBrains Mono', monospace; font-size: 0.9rem; font-weight: bold;
+        }
+
+        .input-group input:focus {
+            border-color: var(--accent-primary);
+            box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.15);
+            background: #0b1121;
+        }
+
+        .btn-primary {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(56, 189, 248, 0.3);
+            transition: transform 0.1s, box-shadow 0.2s;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+        }
+        .btn-primary:hover { box-shadow: 0 6px 15px rgba(56, 189, 248, 0.4); transform: translateY(-1px); }
+        .btn-primary:active { transform: translateY(0); }
+
+        .hint { text-align: right; font-size: 0.7rem; color: #475569; margin-top: 4px; }
+
+        .console-box {
+            background: #000;
+            border-left: 3px solid #334155;
+            padding: 12px;
+            border-radius: 6px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            color: #94a3b8;
+            line-height: 1.4;
+            transition: border-color 0.3s, color 0.3s;
+        }
+        .console-box.active {
+            border-left-color: var(--warning);
+            color: var(--warning);
+            background: rgba(245, 158, 11, 0.05);
+        }
+
+        .controls-bottom { margin-top: auto; display: flex; flex-direction: column; gap: 10px; }
+
+        .btn-outline {
+            background: transparent;
+            border: 1px solid rgba(244, 63, 94, 0.3);
+            color: var(--danger);
+            padding: 10px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: 0.2s;
+        }
+        .btn-outline:hover { background: rgba(244, 63, 94, 0.1); border-color: var(--danger); }
+
+        .btn-ghost {
+            background: rgba(255,255,255,0.05);
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: 0.2s;
+        }
+        .btn-ghost:hover { background: rgba(255,255,255,0.1); }
+
+        /* --- CANVAS --- */
+        .canvas-container {
+            flex-grow: 1;
+            position: relative;
+            background-color: var(--bg-color);
+            background-image: 
+                linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+            background-size: 40px 40px;
+            overflow: hidden;
+            cursor: crosshair;
+        }
+        canvas { display: block; touch-action: none; }
+    </style>
+</head>
+<body>
+
+    <div class="sidebar">
+        <div class="brand"><span>⚡</span> CP Graph Visualizer</div>
+        
+        <div class="input-card">
+            <span class="input-label">New Coordinate</span>
+            <div class="coord-row">
+                <div class="input-group">
+                    <span>X</span>
+                    <input type="number" id="inputX" placeholder="0" onkeydown="if(event.key === 'Enter') addPointFromInput()">
+                </div>
+                <div class="input-group">
+                    <span>Y</span>
+                    <input type="number" id="inputY" placeholder="0" onkeydown="if(event.key === 'Enter') addPointFromInput()">
+                </div>
+            </div>
+            <button class="btn-primary" onclick="addPointFromInput()">
+                Add Point <span style="font-size: 0.8em; opacity: 0.7;">↵</span>
+            </button>
+            <div class="hint">Press Enter to quick-add</div>
+        </div>
+
+        <div>
+            <span class="input-label">Status Log</span>
+            <div id="statusBox" class="console-box">
+                > System Ready.<br>
+                > Click points to connect.<br>
+                > Click lines to remove.
+            </div>
+        </div>
+
+        <div class="controls-bottom">
+            <button class="btn-outline" onclick="clearCanvas()">🗑 Clear Board</button>
+            <button class="btn-ghost" onclick="downloadImage()">📸 Download Image</button>
+        </div>
+    </div>
+
+    <div class="canvas-container" id="canvasWrapper">
+        <canvas id="gridCanvas"></canvas>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('gridCanvas');
+        const ctx = canvas.getContext('2d');
+        const wrapper = document.getElementById('canvasWrapper');
+        const statusBox = document.getElementById('statusBox');
+
+        // State
+        let points = []; 
+        let lines = []; 
+        
+        let selectedPointId = null; 
+        let hoverPointId = null;
+        let hoverLineIndex = null;
+        
+        // Mouse State
+        let currentMouseX = 0;
+        let currentMouseY = 0;
+
+        let scale = 40; 
+        let offsetX = window.innerWidth / 2;
+        let offsetY = window.innerHeight / 2;
+        
+        let isDragging = false;
+        let dragStart = { x: 0, y: 0 };
+        let lastMousePos = { x: 0, y: 0 }; 
+
+        function resize() {
+            canvas.width = wrapper.clientWidth;
+            canvas.height = wrapper.clientHeight;
+            if (points.length === 0) {
+                offsetX = canvas.width / 2;
+                offsetY = canvas.height / 2;
+            }
+            draw();
+        }
+        window.addEventListener('resize', resize);
+
+        function worldToScreen(x, y) {
+            return { x: offsetX + (x * scale), y: offsetY - (y * scale) };
+        }
+
+        // --- MATH HELPERS ---
+        function distToSegment(p, v, w) {
+            const l2 = (w.x - v.x)**2 + (w.y - v.y)**2;
+            if (l2 === 0) return Math.hypot(p.x - v.x, p.y - v.y);
+            let t = ((p.x - v.x) * (w.x - v.x) + (p.y - v.y) * (w.y - v.y)) / l2;
+            t = Math.max(0, Math.min(1, t));
+            const proj = { x: v.x + t * (w.x - v.x), y: v.y + t * (w.y - v.y) };
+            return Math.hypot(p.x - proj.x, p.y - proj.y);
+        }
+
+        function getPointAtScreenPos(sx, sy) {
+            return points.find(p => {
+                const s = worldToScreen(p.x, p.y);
+                return Math.hypot(s.x - sx, s.y - sy) < 14; // Slightly larger hit area
+            });
+        }
+
+        function getLineAtScreenPos(sx, sy) {
+            const mouseP = {x: sx, y: sy};
+            return lines.findIndex(line => {
+                const p1 = points.find(p => p.id === line.p1);
+                const p2 = points.find(p => p.id === line.p2);
+                if (!p1 || !p2) return false;
+                const s1 = worldToScreen(p1.x, p1.y);
+                const s2 = worldToScreen(p2.x, p2.y);
+                return distToSegment(mouseP, s1, s2) < 8;
+            });
+        }
+
+        // --- DRAWING ENGINE ---
+
+        function drawGrid() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.strokeStyle = '#1e293b'; 
+            ctx.lineWidth = 1;
+            
+            const startCol = Math.floor(-offsetX / scale);
+            const endCol = Math.floor((canvas.width - offsetX) / scale) + 1;
+            const startRow = Math.floor(-(canvas.height - offsetY) / scale);
+            const endRow = Math.floor(offsetY / scale) + 1;
+
+            ctx.beginPath();
+            for (let x = startCol; x <= endCol; x++) {
+                let sx = offsetX + (x * scale);
+                ctx.moveTo(sx, 0); ctx.lineTo(sx, canvas.height);
+            }
+            for (let y = startRow; y <= endRow; y++) {
+                let sy = offsetY - (y * scale);
+                ctx.moveTo(0, sy); ctx.lineTo(canvas.width, sy);
+            }
+            ctx.stroke();
+
+            // Axes
+            ctx.strokeStyle = '#475569';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(0, offsetY); ctx.lineTo(canvas.width, offsetY);
+            ctx.moveTo(offsetX, 0); ctx.lineTo(offsetX, canvas.height);
+            ctx.stroke();
+        }
+
+        function drawLines() {
+            ctx.lineCap = 'round';
+            lines.forEach((line, index) => {
+                const p1 = points.find(p => p.id === line.p1);
+                const p2 = points.find(p => p.id === line.p2);
+                if (p1 && p2) {
+                    const s1 = worldToScreen(p1.x, p1.y);
+                    const s2 = worldToScreen(p2.x, p2.y);
+                    ctx.beginPath();
+                    ctx.moveTo(s1.x, s1.y);
+                    ctx.lineTo(s2.x, s2.y);
+
+                    if (index === hoverLineIndex) {
+                        ctx.strokeStyle = '#f43f5e'; 
+                        ctx.lineWidth = 4;
+                        ctx.shadowBlur = 10;
+                        ctx.shadowColor = '#f43f5e';
+                    } else {
+                        ctx.strokeStyle = '#38bdf8'; 
+                        ctx.lineWidth = 3;
+                        ctx.shadowBlur = 0; 
+                    }
+                    ctx.stroke();
+                    ctx.shadowBlur = 0;
+                }
+            });
+        }
+
+        function drawTemporaryLine() {
+            if (selectedPointId !== null) {
+                const p = points.find(pt => pt.id === selectedPointId);
+                if (p) {
+                    const s = worldToScreen(p.x, p.y);
+                    ctx.strokeStyle = '#facc15'; 
+                    ctx.lineWidth = 2;
+                    ctx.setLineDash([5, 5]);
+                    ctx.beginPath();
+                    ctx.moveTo(s.x, s.y);
+                    ctx.lineTo(currentMouseX, currentMouseY);
+                    ctx.stroke();
+                    ctx.setLineDash([]);
+                }
+            }
+        }
+
+        function drawPoints() {
+            // PASS 1: THE ERASER
+            // This is the magic fix. We switch to 'destination-out' to physically
+            // REMOVE the pixels of the lines where the points will be.
+            ctx.save();
+            ctx.globalCompositeOperation = 'destination-out';
+            points.forEach(p => {
+                const s = worldToScreen(p.x, p.y);
+                ctx.beginPath();
+                // Erase a slightly larger area than the visible point
+                ctx.arc(s.x, s.y, 8, 0, Math.PI * 2); 
+                ctx.fill();
+            });
+            ctx.restore();
+
+            // PASS 2: DRAW POINTS
+            points.forEach(p => {
+                const s = worldToScreen(p.x, p.y);
+                ctx.beginPath();
+                let r = 6;
+                if (p.id === hoverPointId || p.id === selectedPointId) r = 9;
+                
+                ctx.arc(s.x, s.y, r, 0, Math.PI * 2);
+
+                if (p.id === selectedPointId) {
+                    ctx.fillStyle = '#facc15'; 
+                    ctx.shadowBlur = 15;
+                    ctx.shadowColor = '#facc15';
+                } else if (p.id === hoverPointId) {
+                    ctx.fillStyle = '#c084fc'; 
+                    ctx.shadowBlur = 5;
+                    ctx.shadowColor = '#c084fc';
+                } else {
+                    ctx.fillStyle = '#f472b6'; 
+                    ctx.shadowBlur = 0;
+                }
+                ctx.fill();
+                ctx.shadowBlur = 0; 
+            });
+
+            // PASS 3: DRAW LABELS
+            ctx.font = '12px "JetBrains Mono"';
+            ctx.textAlign = 'left';
+            ctx.textBaseline = 'bottom';
+            
+            points.forEach(p => {
+                const s = worldToScreen(p.x, p.y);
+                const label = `(${p.x}, ${p.y})`;
+                
+                const textX = s.x + 12;
+                const textY = s.y - 8;
+                
+                // Measure text for background box
+                const metrics = ctx.measureText(label);
+                const bgWidth = metrics.width + 8;
+                const bgHeight = 16;
+
+                // Draw Semi-Transparent Box behind text
+                ctx.fillStyle = 'rgba(11, 17, 33, 0.85)'; // Matches BG, high opacity
+                ctx.fillRect(textX - 4, textY - 14, bgWidth, bgHeight);
+                
+                // Draw Text
+                ctx.fillStyle = '#e2e8f0';
+                ctx.fillText(label, textX, textY);
+            });
+        }
+
+        // --- MASTER LOOP ---
+        function draw() {
+            // 1. clear everything
+            ctx.clearRect(0, 0, canvas.width, canvas.height); 
+            
+            // 2. Draw lines and grid
+            drawGrid();          
+            drawLines();         
+            drawTemporaryLine(); 
+            
+            // 3. Draw points (using the eraser pass to obscure lines)
+            drawPoints();        
+        }
+
+        // --- INTERACTION ---
+
+        function updateStatus(msg, type='normal') {
+            statusBox.innerHTML = `> ${msg}`;
+            if (type === 'active') statusBox.classList.add('active');
+            else statusBox.classList.remove('active');
+        }
+
+        function addPointFromInput() {
+            const inputX = document.getElementById('inputX');
+            const inputY = document.getElementById('inputY');
+            const x = parseFloat(inputX.value);
+            const y = parseFloat(inputY.value);
+            
+            if (!isNaN(x) && isNaN(y)) { inputY.focus(); return; }
+
+            if (!isNaN(x) && !isNaN(y)) {
+                const id = Date.now() + Math.random();
+                points.push({ x, y, id });
+                inputX.value = '';
+                inputY.value = '';
+                inputX.focus();
+                updateStatus(`Added point (${x}, ${y})`);
+                draw();
+            }
+        }
+
+        function clearCanvas() {
+            points = []; lines = [];
+            selectedPointId = null; hoverLineIndex = null;
+            updateStatus("Board cleared.");
+            draw();
+        }
+
+        function downloadImage() {
+            const tempCanvas = document.createElement('canvas');
+            tempCanvas.width = canvas.width;
+            tempCanvas.height = canvas.height;
+            const tCtx = tempCanvas.getContext('2d');
+            tCtx.fillStyle = '#0b1121'; 
+            tCtx.fillRect(0,0, tempCanvas.width, tempCanvas.height);
+            tCtx.drawImage(canvas, 0, 0);
+            tCtx.font = 'bold 20px "JetBrains Mono"';
+            tCtx.fillStyle = '#ffffff';
+            tCtx.fillText("CP Graph Viz", 20, 40);
+            const link = document.createElement('a');
+            link.download = 'cp-grid-viz.png';
+            link.href = tempCanvas.toDataURL();
+            link.click();
+        }
+
+        // --- MOUSE EVENTS ---
+
+        wrapper.addEventListener('mousedown', e => {
+            isDragging = true;
+            dragStart = { x: e.clientX, y: e.clientY };
+            lastMousePos = { x: e.clientX, y: e.clientY };
+            wrapper.style.cursor = 'grabbing';
+        });
+
+        window.addEventListener('mouseup', e => {
+            isDragging = false;
+            wrapper.style.cursor = 'crosshair';
+            const dist = Math.hypot(e.clientX - dragStart.x, e.clientY - dragStart.y);
+            if (dist < 5) handleCanvasClick(e);
+        });
+
+        wrapper.addEventListener('mousemove', e => {
+            const rect = canvas.getBoundingClientRect();
+            currentMouseX = e.clientX - rect.left;
+            currentMouseY = e.clientY - rect.top;
+
+            if (isDragging) {
+                const dx = e.clientX - lastMousePos.x;
+                const dy = e.clientY - lastMousePos.y;
+                offsetX += dx;
+                offsetY += dy;
+                lastMousePos = { x: e.clientX, y: e.clientY };
+                draw();
+                return;
+            }
+
+            const hitPoint = getPointAtScreenPos(currentMouseX, currentMouseY);
+            if (hitPoint) {
+                hoverPointId = hitPoint.id;
+                hoverLineIndex = null;
+                wrapper.style.cursor = 'pointer';
+            } else {
+                hoverPointId = null;
+                const hitLineIdx = getLineAtScreenPos(currentMouseX, currentMouseY);
+                if (hitLineIdx !== -1) {
+                    hoverLineIndex = hitLineIdx;
+                    wrapper.style.cursor = 'pointer';
+                } else {
+                    hoverLineIndex = null;
+                    wrapper.style.cursor = 'crosshair';
+                }
+            }
+            draw();
+        });
+
+        wrapper.addEventListener('wheel', e => {
+            e.preventDefault();
+            const zoomSpeed = 0.1;
+            const newScale = e.deltaY > 0 ? scale * (1 - zoomSpeed) : scale * (1 + zoomSpeed);
+            scale = Math.max(5, Math.min(200, newScale));
+            draw();
+        });
+
+        function handleCanvasClick(e) {
+            const hitPoint = getPointAtScreenPos(currentMouseX, currentMouseY);
+
+            if (hitPoint) {
+                if (selectedPointId === null) {
+                    selectedPointId = hitPoint.id;
+                    updateStatus(`Selected (${hitPoint.x}, ${hitPoint.y})`, 'active');
+                } else if (selectedPointId === hitPoint.id) {
+                    selectedPointId = null;
+                    updateStatus("Selection cancelled.");
+                } else {
+                    lines.push({ p1: selectedPointId, p2: hitPoint.id });
+                    selectedPointId = null; 
+                    updateStatus("Line connected!");
+                }
+            } else {
+                const hitLineIdx = getLineAtScreenPos(currentMouseX, currentMouseY);
+                if (hitLineIdx !== -1) {
+                    lines.splice(hitLineIdx, 1);
+                    hoverLineIndex = null;
+                    updateStatus("Line removed.");
+                } else if (selectedPointId) {
+                    selectedPointId = null;
+                    updateStatus("Selection cancelled.");
+                }
+            }
+            draw();
+        }
+        
+        resize();
+    </script>
+</body>
+</html>
