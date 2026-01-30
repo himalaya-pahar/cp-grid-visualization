@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CP Grid Visualizer</title>
+    <title>CP Grid Visualizer - Final</title>
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Inter:wght@400;600&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -13,7 +13,6 @@
             --text-main: #e2e8f0;
             --text-muted: #94a3b8;
             --accent-primary: #38bdf8;
-            --accent-glow: rgba(56, 189, 248, 0.4);
             --accent-secondary: #818cf8;
             --danger: #f43f5e;
             --warning: #f59e0b;
@@ -187,7 +186,7 @@
 <body>
 
     <div class="sidebar">
-        <div class="brand"><span>⚡</span> CP Graph Visualizer</div>
+        <div class="brand"><span>⚡</span> CP Graph Viz</div>
         
         <div class="input-card">
             <span class="input-label">New Coordinate</span>
@@ -280,7 +279,7 @@
         function getPointAtScreenPos(sx, sy) {
             return points.find(p => {
                 const s = worldToScreen(p.x, p.y);
-                return Math.hypot(s.x - sx, s.y - sy) < 14; // Slightly larger hit area
+                return Math.hypot(s.x - sx, s.y - sy) < 14; 
             });
         }
 
@@ -374,21 +373,9 @@
         }
 
         function drawPoints() {
-            // PASS 1: THE ERASER
-            // This is the magic fix. We switch to 'destination-out' to physically
-            // REMOVE the pixels of the lines where the points will be.
-            ctx.save();
-            ctx.globalCompositeOperation = 'destination-out';
-            points.forEach(p => {
-                const s = worldToScreen(p.x, p.y);
-                ctx.beginPath();
-                // Erase a slightly larger area than the visible point
-                ctx.arc(s.x, s.y, 8, 0, Math.PI * 2); 
-                ctx.fill();
-            });
-            ctx.restore();
-
-            // PASS 2: DRAW POINTS
+            // Points are drawn ON TOP of lines. 
+            // We removed the eraser.
+            
             points.forEach(p => {
                 const s = worldToScreen(p.x, p.y);
                 ctx.beginPath();
@@ -397,6 +384,7 @@
                 
                 ctx.arc(s.x, s.y, r, 0, Math.PI * 2);
 
+                // FILL logic
                 if (p.id === selectedPointId) {
                     ctx.fillStyle = '#facc15'; 
                     ctx.shadowBlur = 15;
@@ -410,10 +398,16 @@
                     ctx.shadowBlur = 0;
                 }
                 ctx.fill();
+                
+                // STROKE logic: This creates the separation without erasing data
+                ctx.lineWidth = 2;
+                ctx.strokeStyle = '#0b1121'; // Matches background
+                ctx.stroke();
+
                 ctx.shadowBlur = 0; 
             });
 
-            // PASS 3: DRAW LABELS
+            // LABELS logic
             ctx.font = '12px "JetBrains Mono"';
             ctx.textAlign = 'left';
             ctx.textBaseline = 'bottom';
@@ -425,33 +419,27 @@
                 const textX = s.x + 12;
                 const textY = s.y - 8;
                 
-                // Measure text for background box
                 const metrics = ctx.measureText(label);
                 const bgWidth = metrics.width + 8;
                 const bgHeight = 16;
 
-                // Draw Semi-Transparent Box behind text
-                ctx.fillStyle = 'rgba(11, 17, 33, 0.85)'; // Matches BG, high opacity
+                // Semi-Transparent Box for text readability
+                ctx.fillStyle = 'rgba(11, 17, 33, 0.85)';
                 ctx.fillRect(textX - 4, textY - 14, bgWidth, bgHeight);
                 
-                // Draw Text
                 ctx.fillStyle = '#e2e8f0';
                 ctx.fillText(label, textX, textY);
             });
         }
 
-        // --- MASTER LOOP ---
         function draw() {
-            // 1. clear everything
             ctx.clearRect(0, 0, canvas.width, canvas.height); 
             
-            // 2. Draw lines and grid
+            // Order matters:
             drawGrid();          
             drawLines();         
             drawTemporaryLine(); 
-            
-            // 3. Draw points (using the eraser pass to obscure lines)
-            drawPoints();        
+            drawPoints(); // Points last, so they sit on top of lines
         }
 
         // --- INTERACTION ---
