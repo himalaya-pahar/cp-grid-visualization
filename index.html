@@ -16,6 +16,7 @@
             --accent-secondary: #818cf8;
             --danger: #f43f5e;
             --warning: #f59e0b;
+            --key-bg: #334155;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -31,7 +32,7 @@
 
         /* --- SIDEBAR --- */
         .sidebar {
-            width: 320px;
+            width: 340px;
             background-color: var(--panel-bg);
             padding: 25px;
             display: flex;
@@ -44,17 +45,18 @@
 
         .brand {
             font-family: 'JetBrains Mono', monospace;
-            font-size: 1.1rem;
+            font-size: 1.2rem;
             font-weight: 700;
             color: white;
             letter-spacing: -0.5px;
-            margin-bottom: 10px;
+            margin-bottom: 5px;
             display: flex;
             align-items: center;
             gap: 10px;
         }
         .brand span { color: var(--accent-primary); }
 
+        /* Input Section */
         .input-card {
             background: rgba(255,255,255,0.03);
             border: 1px solid rgba(255,255,255,0.05);
@@ -80,7 +82,7 @@
             background: var(--input-bg);
             border: 1px solid #334155;
             color: var(--accent-primary);
-            padding: 12px 12px 12px 30px;
+            padding: 10px 10px 10px 30px;
             border-radius: 8px;
             font-family: 'JetBrains Mono', monospace;
             font-size: 1rem;
@@ -119,17 +121,45 @@
         .btn-primary:hover { box-shadow: 0 6px 15px rgba(56, 189, 248, 0.4); transform: translateY(-1px); }
         .btn-primary:active { transform: translateY(0); }
 
-        .hint { text-align: right; font-size: 0.7rem; color: #475569; margin-top: 4px; }
+        /* INSTRUCTIONS PANEL */
+        .instructions {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            background: rgba(0,0,0,0.2);
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
 
+        .key-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            align-items: center;
+        }
+        .key-row:last-child { margin-bottom: 0; }
+
+        .key {
+            background: var(--key-bg);
+            color: #fff;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            border-bottom: 2px solid #1e293b;
+        }
+
+        /* CONSOLE LOG */
         .console-box {
             background: #000;
             border-left: 3px solid #334155;
-            padding: 12px;
+            padding: 10px;
             border-radius: 6px;
             font-family: 'JetBrains Mono', monospace;
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             color: #94a3b8;
             line-height: 1.4;
+            min-height: 50px;
             transition: border-color 0.3s, color 0.3s;
         }
         .console-box.active {
@@ -186,10 +216,10 @@
 <body>
 
     <div class="sidebar">
-        <div class="brand"><span>⚡</span> CP Graph Visualizer</div>
+        <div class="brand"><span>⚡</span> CP Grid Visualizer</div>
         
         <div class="input-card">
-            <span class="input-label">New Coordinate</span>
+            <span class="input-label">Quick Add</span>
             <div class="coord-row">
                 <div class="input-group">
                     <span>X</span>
@@ -203,15 +233,42 @@
             <button class="btn-primary" onclick="addPointFromInput()">
                 Add Point <span style="font-size: 0.8em; opacity: 0.7;">↵</span>
             </button>
-            <div class="hint">Press Enter to quick-add</div>
         </div>
 
         <div>
-            <span class="input-label">Status Log</span>
+            <span class="input-label">How to Use</span>
+            <div class="instructions">
+                <div class="key-row">
+                    <span>Add Point</span>
+                    <div><span class="key">X</span> + <span class="key">Y</span> + <span class="key">Enter</span></div>
+                </div>
+                <div class="key-row">
+                    <span>Connect</span>
+                    <div><span class="key">Click Point A</span> then <span class="key">B</span></div>
+                </div>
+                <div class="key-row">
+                    <span>Delete Point</span>
+                    <span class="key">Right Click Point</span>
+                </div>
+                <div class="key-row">
+                    <span>Delete Line</span>
+                    <span class="key">Click Line</span>
+                </div>
+                <div class="key-row">
+                    <span>Pan / Move</span>
+                    <span class="key">Drag Mouse</span>
+                </div>
+                <div class="key-row">
+                    <span>Zoom</span>
+                    <span class="key">Scroll Wheel</span>
+                </div>
+            </div>
+        </div>
+
+        <div>
+            <span class="input-label">Status</span>
             <div id="statusBox" class="console-box">
-                > System Ready.<br>
-                > Click points to connect.<br>
-                > Click lines to remove.
+                > System Ready.
             </div>
         </div>
 
@@ -373,9 +430,6 @@
         }
 
         function drawPoints() {
-            // Points are drawn ON TOP of lines. 
-            // We removed the eraser.
-            
             points.forEach(p => {
                 const s = worldToScreen(p.x, p.y);
                 ctx.beginPath();
@@ -384,7 +438,7 @@
                 
                 ctx.arc(s.x, s.y, r, 0, Math.PI * 2);
 
-                // FILL logic
+                // FILL
                 if (p.id === selectedPointId) {
                     ctx.fillStyle = '#facc15'; 
                     ctx.shadowBlur = 15;
@@ -399,15 +453,14 @@
                 }
                 ctx.fill();
                 
-                // STROKE logic: This creates the separation without erasing data
+                // STROKE (Outline for visibility)
                 ctx.lineWidth = 2;
-                ctx.strokeStyle = '#0b1121'; // Matches background
+                ctx.strokeStyle = '#0b1121'; 
                 ctx.stroke();
-
                 ctx.shadowBlur = 0; 
             });
 
-            // LABELS logic
+            // LABELS
             ctx.font = '12px "JetBrains Mono"';
             ctx.textAlign = 'left';
             ctx.textBaseline = 'bottom';
@@ -423,7 +476,7 @@
                 const bgWidth = metrics.width + 8;
                 const bgHeight = 16;
 
-                // Semi-Transparent Box for text readability
+                // Box behind text
                 ctx.fillStyle = 'rgba(11, 17, 33, 0.85)';
                 ctx.fillRect(textX - 4, textY - 14, bgWidth, bgHeight);
                 
@@ -434,12 +487,10 @@
 
         function draw() {
             ctx.clearRect(0, 0, canvas.width, canvas.height); 
-            
-            // Order matters:
             drawGrid();          
             drawLines();         
             drawTemporaryLine(); 
-            drawPoints(); // Points last, so they sit on top of lines
+            drawPoints(); 
         }
 
         // --- INTERACTION ---
@@ -486,9 +537,9 @@
             tCtx.drawImage(canvas, 0, 0);
             tCtx.font = 'bold 20px "JetBrains Mono"';
             tCtx.fillStyle = '#ffffff';
-            tCtx.fillText("CP Graph Visualizer", 20, 40);
+            tCtx.fillText("CP Grid Visualizer", 20, 40);
             const link = document.createElement('a');
-            link.download = 'cp-grid-viz.png';
+            link.download = 'cp-grid-visualizer.png';
             link.href = tempCanvas.toDataURL();
             link.click();
         }
@@ -496,17 +547,42 @@
         // --- MOUSE EVENTS ---
 
         wrapper.addEventListener('mousedown', e => {
-            isDragging = true;
-            dragStart = { x: e.clientX, y: e.clientY };
-            lastMousePos = { x: e.clientX, y: e.clientY };
-            wrapper.style.cursor = 'grabbing';
+            if (e.button === 0) { // Left Click
+                isDragging = true;
+                dragStart = { x: e.clientX, y: e.clientY };
+                lastMousePos = { x: e.clientX, y: e.clientY };
+                wrapper.style.cursor = 'grabbing';
+            }
         });
 
         window.addEventListener('mouseup', e => {
-            isDragging = false;
-            wrapper.style.cursor = 'crosshair';
-            const dist = Math.hypot(e.clientX - dragStart.x, e.clientY - dragStart.y);
-            if (dist < 5) handleCanvasClick(e);
+            if (e.button === 0) { // Left Click
+                isDragging = false;
+                wrapper.style.cursor = 'crosshair';
+                const dist = Math.hypot(e.clientX - dragStart.x, e.clientY - dragStart.y);
+                if (dist < 5) handleCanvasClick(e);
+            }
+        });
+
+        // Right Click (Delete)
+        wrapper.addEventListener('contextmenu', e => {
+            e.preventDefault(); 
+            const rect = canvas.getBoundingClientRect();
+            const mouseX = e.clientX - rect.left;
+            const mouseY = e.clientY - rect.top;
+            const hitPoint = getPointAtScreenPos(mouseX, mouseY);
+            
+            if (hitPoint) {
+                // Remove lines connected to this point
+                lines = lines.filter(l => l.p1 !== hitPoint.id && l.p2 !== hitPoint.id);
+                // Remove point
+                points = points.filter(p => p.id !== hitPoint.id);
+                
+                if (selectedPointId === hitPoint.id) selectedPointId = null;
+                
+                updateStatus("Point deleted.", "warning");
+                draw();
+            }
         });
 
         wrapper.addEventListener('mousemove', e => {
