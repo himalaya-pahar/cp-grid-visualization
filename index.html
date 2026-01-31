@@ -41,6 +41,25 @@
             box-shadow: 4px 0 20px rgba(0,0,0,0.4);
             z-index: 10;
             border-right: 1px solid rgba(255,255,255,0.05);
+            
+            /* SCROLLING FIX */
+            overflow-y: auto;
+            max-height: 100vh;
+        }
+
+        /* CUSTOM SCROLLBAR FOR SIDEBAR */
+        .sidebar::-webkit-scrollbar {
+            width: 6px;
+        }
+        .sidebar::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.1);
+        }
+        .sidebar::-webkit-scrollbar-thumb {
+            background: #334155;
+            border-radius: 4px;
+        }
+        .sidebar::-webkit-scrollbar-thumb:hover {
+            background: #475569;
         }
 
         .brand {
@@ -53,6 +72,7 @@
             display: flex;
             align-items: center;
             gap: 10px;
+            flex-shrink: 0; /* Prevents logo from squashing */
         }
         .brand span { color: var(--accent-primary); }
 
@@ -61,6 +81,7 @@
             border: 1px solid rgba(255,255,255,0.05);
             padding: 15px;
             border-radius: 12px;
+            flex-shrink: 0;
         }
 
         .input-label {
@@ -130,6 +151,7 @@
             border-radius: 8px;
             border: 1px solid rgba(255,255,255,0.05);
             margin-bottom: 10px;
+            flex-shrink: 0;
         }
         .toggle-label { font-size: 0.85rem; color: #e2e8f0; font-weight: 500; }
         
@@ -156,6 +178,7 @@
             padding: 15px;
             border-radius: 8px;
             border: 1px solid rgba(255,255,255,0.05);
+            flex-shrink: 0;
         }
         .key-row { display: flex; justify-content: space-between; margin-bottom: 8px; align-items: center; }
         .key-row:last-child { margin-bottom: 0; }
@@ -168,10 +191,11 @@
             background: #000; border-left: 3px solid #334155; padding: 10px; border-radius: 6px;
             font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; color: #94a3b8;
             line-height: 1.6; min-height: 50px; transition: border-color 0.3s, color 0.3s;
+            flex-shrink: 0;
         }
         .console-box.active { border-left-color: var(--warning); color: var(--warning); background: rgba(245, 158, 11, 0.05); }
 
-        .controls-bottom { margin-top: auto; display: flex; flex-direction: column; gap: 10px; }
+        .controls-bottom { margin-top: auto; display: flex; flex-direction: column; gap: 10px; flex-shrink: 0; }
         .btn-outline {
             background: transparent; border: 1px solid rgba(244, 63, 94, 0.3); color: var(--danger);
             padding: 10px; border-radius: 8px; cursor: pointer; font-weight: 600; transition: 0.2s;
@@ -193,6 +217,7 @@
             color: var(--text-muted);
             text-align: center;
             line-height: 1.6;
+            flex-shrink: 0;
         }
         .footer a {
             color: var(--text-muted);
@@ -227,7 +252,7 @@
 <body>
 
     <div class="sidebar">
-        <div class="brand"><span>⚡</span> CP Grid Visualizer</div>
+        <div class="brand"> CP Grid Visualizer</div>
         
         <div class="input-card">
             <span class="input-label">Quick Add</span>
@@ -447,12 +472,12 @@
 
                     if (index === hoverLineIndex) {
                         // ** HIGH VISIBILITY HOVER **
-                        ctx.strokeStyle = '#ff2255'; // Bright Neon Red/Pink
-                        ctx.lineWidth = 5; // Thicker
+                        ctx.strokeStyle = '#ff2255'; 
+                        ctx.lineWidth = 5; 
                         ctx.shadowBlur = 15; 
-                        ctx.shadowColor = '#ff2255'; // Glowing Red
+                        ctx.shadowColor = '#ff2255'; 
                         
-                        // --- HOVER TOOLTIP (Solid Texture) ---
+                        // --- HOVER TOOLTIP ---
                         const midX = (s1.x + s2.x) / 2;
                         const midY = (s1.y + s2.y) / 2;
                         
@@ -473,33 +498,13 @@
                         const bx = midX - boxW/2;
                         const by = midY - 50;
                         
-                        // 1. Shadow for Box (Depth)
-                        ctx.shadowColor = 'rgba(0,0,0,0.8)';
-                        ctx.shadowBlur = 10;
-
-                        // 2. SOLID Background (Hides grid lines)
-                        ctx.fillStyle = '#1e293b'; // Solid Slate-800
-                        ctx.fillRect(bx, by, boxW, boxH);
-                        
-                        // 3. Border
-                        ctx.strokeStyle = '#38bdf8';
-                        ctx.lineWidth = 1;
-                        ctx.strokeRect(bx, by, boxW, boxH);
-                        
-                        // 4. Reset Shadow for Text
+                        ctx.shadowColor = 'rgba(0,0,0,0.8)'; ctx.shadowBlur = 10;
+                        ctx.fillStyle = '#1e293b'; ctx.fillRect(bx, by, boxW, boxH);
+                        ctx.strokeStyle = '#38bdf8'; ctx.lineWidth = 1; ctx.strokeRect(bx, by, boxW, boxH);
                         ctx.shadowBlur = 0;
-
-                        // 5. High Contrast Text
-                        ctx.textAlign = 'center';
-                        ctx.textBaseline = 'middle';
-                        
-                        // Label 1: Bright Green/Cyan
-                        ctx.fillStyle = '#22d3ee'; 
-                        ctx.fillText(label1, midX, by + 12);
-                        
-                        // Label 2: Bright Yellow
-                        ctx.fillStyle = '#facc15'; 
-                        ctx.fillText(label2, midX, by + 28);
+                        ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+                        ctx.fillStyle = '#22d3ee'; ctx.fillText(label1, midX, by + 12);
+                        ctx.fillStyle = '#facc15'; ctx.fillText(label2, midX, by + 28);
                         
                     } else {
                         ctx.strokeStyle = '#38bdf8'; ctx.lineWidth = 3;
