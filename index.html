@@ -56,7 +56,6 @@
         }
         .brand span { color: var(--accent-primary); }
 
-        /* Input Section */
         .input-card {
             background: rgba(255,255,255,0.03);
             border: 1px solid rgba(255,255,255,0.05);
@@ -121,7 +120,35 @@
         .btn-primary:hover { box-shadow: 0 6px 15px rgba(56, 189, 248, 0.4); transform: translateY(-1px); }
         .btn-primary:active { transform: translateY(0); }
 
-        /* INSTRUCTIONS PANEL */
+        /* TOGGLE SWITCH */
+        .toggle-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: rgba(255,255,255,0.03);
+            padding: 10px 15px;
+            border-radius: 8px;
+            border: 1px solid rgba(255,255,255,0.05);
+            margin-bottom: 10px;
+        }
+        .toggle-label { font-size: 0.85rem; color: #e2e8f0; font-weight: 500; }
+        
+        .switch {
+            position: relative; display: inline-block; width: 40px; height: 20px;
+        }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider {
+            position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0;
+            background-color: #334155; transition: .4s; border-radius: 34px;
+        }
+        .slider:before {
+            position: absolute; content: ""; height: 14px; width: 14px; left: 3px; bottom: 3px;
+            background-color: white; transition: .4s; border-radius: 50%;
+        }
+        input:checked + .slider { background-color: var(--accent-primary); }
+        input:checked + .slider:before { transform: translateX(20px); }
+
+        /* INSTRUCTIONS */
         .instructions {
             font-size: 0.85rem;
             color: var(--text-muted);
@@ -130,85 +157,69 @@
             border-radius: 8px;
             border: 1px solid rgba(255,255,255,0.05);
         }
-
-        .key-row {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 8px;
-            align-items: center;
-        }
+        .key-row { display: flex; justify-content: space-between; margin-bottom: 8px; align-items: center; }
         .key-row:last-child { margin-bottom: 0; }
-
         .key {
-            background: var(--key-bg);
-            color: #fff;
-            padding: 2px 6px;
-            border-radius: 4px;
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.7rem;
-            border-bottom: 2px solid #1e293b;
+            background: var(--key-bg); color: #fff; padding: 2px 6px; border-radius: 4px;
+            font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; border-bottom: 2px solid #1e293b;
         }
 
-        /* CONSOLE LOG */
         .console-box {
-            background: #000;
-            border-left: 3px solid #334155;
-            padding: 10px;
-            border-radius: 6px;
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.75rem;
-            color: #94a3b8;
-            line-height: 1.4;
-            min-height: 50px;
-            transition: border-color 0.3s, color 0.3s;
+            background: #000; border-left: 3px solid #334155; padding: 10px; border-radius: 6px;
+            font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; color: #94a3b8;
+            line-height: 1.4; min-height: 50px; transition: border-color 0.3s, color 0.3s;
         }
-        .console-box.active {
-            border-left-color: var(--warning);
-            color: var(--warning);
-            background: rgba(245, 158, 11, 0.05);
-        }
+        .console-box.active { border-left-color: var(--warning); color: var(--warning); background: rgba(245, 158, 11, 0.05); }
 
         .controls-bottom { margin-top: auto; display: flex; flex-direction: column; gap: 10px; }
-
         .btn-outline {
-            background: transparent;
-            border: 1px solid rgba(244, 63, 94, 0.3);
-            color: var(--danger);
-            padding: 10px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: 600;
-            transition: 0.2s;
+            background: transparent; border: 1px solid rgba(244, 63, 94, 0.3); color: var(--danger);
+            padding: 10px; border-radius: 8px; cursor: pointer; font-weight: 600; transition: 0.2s;
         }
         .btn-outline:hover { background: rgba(244, 63, 94, 0.1); border-color: var(--danger); }
-
         .btn-ghost {
-            background: rgba(255,255,255,0.05);
-            color: white;
-            border: none;
-            padding: 12px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: 500;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            transition: 0.2s;
+            background: rgba(255,255,255,0.05); color: white; border: none; padding: 12px;
+            border-radius: 8px; cursor: pointer; font-weight: 500; display: flex; align-items: center;
+            justify-content: center; gap: 8px; transition: 0.2s;
         }
         .btn-ghost:hover { background: rgba(255,255,255,0.1); }
 
-        /* --- CANVAS --- */
+        /* FOOTER STYLES */
+        .footer {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid rgba(255,255,255,0.05);
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            text-align: center;
+            line-height: 1.6;
+        }
+        .footer a {
+            color: var(--text-muted);
+            text-decoration: none;
+            margin: 0 5px;
+            transition: color 0.2s;
+            font-weight: 600;
+        }
+        .footer a:hover {
+            color: var(--accent-primary);
+        }
+        .heart { color: #f43f5e; font-size: 0.9rem; }
+        
+        .version { 
+            margin-top: 8px; 
+            color: var(--accent-secondary); 
+            font-size: 0.8rem; 
+            opacity: 1; 
+            font-weight: bold; 
+        }
+
+        /* CANVAS */
         .canvas-container {
-            flex-grow: 1;
-            position: relative;
-            background-color: var(--bg-color);
-            background-image: 
-                linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
-            background-size: 40px 40px;
-            overflow: hidden;
-            cursor: crosshair;
+            flex-grow: 1; position: relative; background-color: var(--bg-color);
+            background-image: linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+                              linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+            background-size: 40px 40px; overflow: hidden; cursor: crosshair;
         }
         canvas { display: block; touch-action: none; }
     </style>
@@ -236,31 +247,43 @@
         </div>
 
         <div>
-            <span class="input-label">How to Use</span>
+            <span class="input-label">Settings</span>
+            
+            <div class="toggle-container">
+                <span class="toggle-label">Snap to Grid (Integer)</span>
+                <label class="switch">
+                    <input type="checkbox" id="snapToggle" checked>
+                    <span class="slider"></span>
+                </label>
+            </div>
+
+            <div class="toggle-container">
+                <span class="toggle-label">Allow Adding Points</span>
+                <label class="switch">
+                    <input type="checkbox" id="clickAddToggle" checked>
+                    <span class="slider"></span>
+                </label>
+            </div>
+        </div>
+
+        <div>
+            <span class="input-label">Controls</span>
             <div class="instructions">
-                <div class="key-row">
+                 <div class="key-row">
                     <span>Add Point</span>
-                    <div><span class="key">X</span> + <span class="key">Y</span> + <span class="key">Enter</span></div>
+                    <span class="key">Click Empty</span>
                 </div>
                 <div class="key-row">
                     <span>Connect</span>
-                    <div><span class="key">Click Point A</span> then <span class="key">B</span></div>
+                    <div><span class="key">Click A</span> then <span class="key">B</span></div>
                 </div>
                 <div class="key-row">
-                    <span>Delete Point</span>
-                    <span class="key">Right Click Point</span>
+                    <span>Delete</span>
+                    <span class="key">Right Click</span>
                 </div>
                 <div class="key-row">
-                    <span>Delete Line</span>
-                    <span class="key">Click Line</span>
-                </div>
-                <div class="key-row">
-                    <span>Pan / Move</span>
+                    <span>Pan</span>
                     <span class="key">Drag Mouse</span>
-                </div>
-                <div class="key-row">
-                    <span>Zoom</span>
-                    <span class="key">Scroll Wheel</span>
                 </div>
             </div>
         </div>
@@ -276,6 +299,14 @@
             <button class="btn-outline" onclick="clearCanvas()">🗑 Clear Board</button>
             <button class="btn-ghost" onclick="downloadImage()">📸 Download Image</button>
         </div>
+
+        <div class="footer">
+            Built by 
+            <a href="https://www.linkedin.com/in/nafis-shahriar-687402287/" target="_blank">Nafis Shahriar</a>
+            <br>
+            <a href="https://codeforces.com/profile/Himalaya_" target="_blank">• Codeforces</a>
+            <div class="version">v1.1</div>
+        </div>
     </div>
 
     <div class="canvas-container" id="canvasWrapper">
@@ -287,23 +318,22 @@
         const ctx = canvas.getContext('2d');
         const wrapper = document.getElementById('canvasWrapper');
         const statusBox = document.getElementById('statusBox');
+        
+        // Toggles
+        const snapToggle = document.getElementById('snapToggle');
+        const clickAddToggle = document.getElementById('clickAddToggle');
 
         // State
         let points = []; 
         let lines = []; 
-        
         let selectedPointId = null; 
         let hoverPointId = null;
         let hoverLineIndex = null;
-        
-        // Mouse State
         let currentMouseX = 0;
         let currentMouseY = 0;
-
         let scale = 40; 
         let offsetX = window.innerWidth / 2;
         let offsetY = window.innerHeight / 2;
-        
         let isDragging = false;
         let dragStart = { x: 0, y: 0 };
         let lastMousePos = { x: 0, y: 0 }; 
@@ -321,6 +351,9 @@
 
         function worldToScreen(x, y) {
             return { x: offsetX + (x * scale), y: offsetY - (y * scale) };
+        }
+        function screenToWorld(sx, sy) {
+            return { x: (sx - offsetX) / scale, y: (offsetY - sy) / scale };
         }
 
         // --- MATH HELPERS ---
@@ -353,11 +386,9 @@
         }
 
         // --- DRAWING ENGINE ---
-
         function drawGrid() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
-            ctx.strokeStyle = '#1e293b'; 
-            ctx.lineWidth = 1;
+            ctx.strokeStyle = '#1e293b'; ctx.lineWidth = 1;
             
             const startCol = Math.floor(-offsetX / scale);
             const endCol = Math.floor((canvas.width - offsetX) / scale) + 1;
@@ -366,22 +397,40 @@
 
             ctx.beginPath();
             for (let x = startCol; x <= endCol; x++) {
-                let sx = offsetX + (x * scale);
-                ctx.moveTo(sx, 0); ctx.lineTo(sx, canvas.height);
+                let sx = offsetX + (x * scale); ctx.moveTo(sx, 0); ctx.lineTo(sx, canvas.height);
             }
             for (let y = startRow; y <= endRow; y++) {
-                let sy = offsetY - (y * scale);
-                ctx.moveTo(0, sy); ctx.lineTo(canvas.width, sy);
+                let sy = offsetY - (y * scale); ctx.moveTo(0, sy); ctx.lineTo(canvas.width, sy);
             }
             ctx.stroke();
 
             // Axes
-            ctx.strokeStyle = '#475569';
-            ctx.lineWidth = 2;
+            ctx.strokeStyle = '#475569'; ctx.lineWidth = 2;
             ctx.beginPath();
             ctx.moveTo(0, offsetY); ctx.lineTo(canvas.width, offsetY);
             ctx.moveTo(offsetX, 0); ctx.lineTo(offsetX, canvas.height);
             ctx.stroke();
+
+            // Axis Labels
+            ctx.fillStyle = '#64748b'; ctx.font = '10px "Inter"'; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+            let step = 1;
+            if (scale < 30) step = 2;
+            if (scale < 15) step = 5;
+            if (scale < 8) step = 10;
+            if (scale < 4) step = 20;
+
+            for (let x = startCol; x <= endCol; x++) {
+                if (x === 0 || x % step !== 0) continue; 
+                let sx = offsetX + (x * scale);
+                ctx.fillText(x, sx, offsetY + 8);
+            }
+            ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
+            for (let y = startRow; y <= endRow; y++) {
+                if (y === 0 || y % step !== 0) continue;
+                let sy = offsetY - (y * scale);
+                ctx.fillText(y, offsetX - 8, sy);
+            }
+            ctx.fillText("0", offsetX - 6, offsetY + 8);
         }
 
         function drawLines() {
@@ -397,17 +446,13 @@
                     ctx.lineTo(s2.x, s2.y);
 
                     if (index === hoverLineIndex) {
-                        ctx.strokeStyle = '#f43f5e'; 
-                        ctx.lineWidth = 4;
-                        ctx.shadowBlur = 10;
-                        ctx.shadowColor = '#f43f5e';
+                        ctx.strokeStyle = '#f43f5e'; ctx.lineWidth = 4;
+                        ctx.shadowBlur = 10; ctx.shadowColor = '#f43f5e';
                     } else {
-                        ctx.strokeStyle = '#38bdf8'; 
-                        ctx.lineWidth = 3;
+                        ctx.strokeStyle = '#38bdf8'; ctx.lineWidth = 3;
                         ctx.shadowBlur = 0; 
                     }
-                    ctx.stroke();
-                    ctx.shadowBlur = 0;
+                    ctx.stroke(); ctx.shadowBlur = 0;
                 }
             });
         }
@@ -417,8 +462,7 @@
                 const p = points.find(pt => pt.id === selectedPointId);
                 if (p) {
                     const s = worldToScreen(p.x, p.y);
-                    ctx.strokeStyle = '#facc15'; 
-                    ctx.lineWidth = 2;
+                    ctx.strokeStyle = '#facc15'; ctx.lineWidth = 2;
                     ctx.setLineDash([5, 5]);
                     ctx.beginPath();
                     ctx.moveTo(s.x, s.y);
@@ -437,48 +481,27 @@
                 if (p.id === hoverPointId || p.id === selectedPointId) r = 9;
                 
                 ctx.arc(s.x, s.y, r, 0, Math.PI * 2);
-
-                // FILL
                 if (p.id === selectedPointId) {
-                    ctx.fillStyle = '#facc15'; 
-                    ctx.shadowBlur = 15;
-                    ctx.shadowColor = '#facc15';
+                    ctx.fillStyle = '#facc15'; ctx.shadowBlur = 15; ctx.shadowColor = '#facc15';
                 } else if (p.id === hoverPointId) {
-                    ctx.fillStyle = '#c084fc'; 
-                    ctx.shadowBlur = 5;
-                    ctx.shadowColor = '#c084fc';
+                    ctx.fillStyle = '#c084fc'; ctx.shadowBlur = 5; ctx.shadowColor = '#c084fc';
                 } else {
-                    ctx.fillStyle = '#f472b6'; 
-                    ctx.shadowBlur = 0;
+                    ctx.fillStyle = '#f472b6'; ctx.shadowBlur = 0;
                 }
                 ctx.fill();
-                
-                // STROKE (Outline for visibility)
-                ctx.lineWidth = 2;
-                ctx.strokeStyle = '#0b1121'; 
-                ctx.stroke();
+                ctx.lineWidth = 2; ctx.strokeStyle = '#0b1121'; ctx.stroke();
                 ctx.shadowBlur = 0; 
             });
 
-            // LABELS
-            ctx.font = '12px "JetBrains Mono"';
-            ctx.textAlign = 'left';
-            ctx.textBaseline = 'bottom';
-            
+            ctx.font = '12px "JetBrains Mono"'; ctx.textAlign = 'left'; ctx.textBaseline = 'bottom';
             points.forEach(p => {
                 const s = worldToScreen(p.x, p.y);
                 const label = `(${p.x}, ${p.y})`;
-                
-                const textX = s.x + 12;
-                const textY = s.y - 8;
-                
+                const textX = s.x + 12; const textY = s.y - 8;
                 const metrics = ctx.measureText(label);
-                const bgWidth = metrics.width + 8;
-                const bgHeight = 16;
-
-                // Box behind text
+                
                 ctx.fillStyle = 'rgba(11, 17, 33, 0.85)';
-                ctx.fillRect(textX - 4, textY - 14, bgWidth, bgHeight);
+                ctx.fillRect(textX - 4, textY - 14, metrics.width + 8, 16);
                 
                 ctx.fillStyle = '#e2e8f0';
                 ctx.fillText(label, textX, textY);
@@ -487,14 +510,10 @@
 
         function draw() {
             ctx.clearRect(0, 0, canvas.width, canvas.height); 
-            drawGrid();          
-            drawLines();         
-            drawTemporaryLine(); 
-            drawPoints(); 
+            drawGrid(); drawLines(); drawTemporaryLine(); drawPoints(); 
         }
 
         // --- INTERACTION ---
-
         function updateStatus(msg, type='normal') {
             statusBox.innerHTML = `> ${msg}`;
             if (type === 'active') statusBox.classList.add('active');
@@ -504,84 +523,75 @@
         function addPointFromInput() {
             const inputX = document.getElementById('inputX');
             const inputY = document.getElementById('inputY');
+            
+            // ** BLOCKER: Check if addition is allowed **
+            if (!clickAddToggle.checked) {
+                updateStatus("⚠ Enable 'Allow Adding Points' to add points!", "warning");
+                return;
+            }
+
             const x = parseFloat(inputX.value);
             const y = parseFloat(inputY.value);
-            
             if (!isNaN(x) && isNaN(y)) { inputY.focus(); return; }
-
             if (!isNaN(x) && !isNaN(y)) {
-                const id = Date.now() + Math.random();
-                points.push({ x, y, id });
-                inputX.value = '';
-                inputY.value = '';
-                inputX.focus();
-                updateStatus(`Added point (${x}, ${y})`);
-                draw();
+                addPoint(x, y);
+                inputX.value = ''; inputY.value = ''; inputX.focus();
             }
         }
 
-        function clearCanvas() {
-            points = []; lines = [];
-            selectedPointId = null; hoverLineIndex = null;
-            updateStatus("Board cleared.");
+        function addPoint(x, y) {
+            const exists = points.some(p => p.x === x && p.y === y);
+            if (exists) {
+                updateStatus(`Point (${x}, ${y}) already exists.`, 'warning'); return;
+            }
+            const id = Date.now() + Math.random();
+            points.push({ x, y, id });
+            updateStatus(`Added point (${x}, ${y})`);
             draw();
+        }
+
+        function clearCanvas() {
+            points = []; lines = []; selectedPointId = null; hoverLineIndex = null;
+            updateStatus("Board cleared."); draw();
         }
 
         function downloadImage() {
             const tempCanvas = document.createElement('canvas');
-            tempCanvas.width = canvas.width;
-            tempCanvas.height = canvas.height;
+            tempCanvas.width = canvas.width; tempCanvas.height = canvas.height;
             const tCtx = tempCanvas.getContext('2d');
-            tCtx.fillStyle = '#0b1121'; 
-            tCtx.fillRect(0,0, tempCanvas.width, tempCanvas.height);
+            tCtx.fillStyle = '#0b1121'; tCtx.fillRect(0,0, tempCanvas.width, tempCanvas.height);
             tCtx.drawImage(canvas, 0, 0);
-            tCtx.font = 'bold 20px "JetBrains Mono"';
-            tCtx.fillStyle = '#ffffff';
+            tCtx.font = 'bold 20px "JetBrains Mono"'; tCtx.fillStyle = '#ffffff';
             tCtx.fillText("CP Grid Visualizer", 20, 40);
             const link = document.createElement('a');
-            link.download = 'cp-grid-visualizer.png';
-            link.href = tempCanvas.toDataURL();
-            link.click();
+            link.download = 'cp-grid-visualizer.png'; link.href = tempCanvas.toDataURL(); link.click();
         }
 
-        // --- MOUSE EVENTS ---
-
+        // --- MOUSE ---
         wrapper.addEventListener('mousedown', e => {
-            if (e.button === 0) { // Left Click
-                isDragging = true;
-                dragStart = { x: e.clientX, y: e.clientY };
-                lastMousePos = { x: e.clientX, y: e.clientY };
-                wrapper.style.cursor = 'grabbing';
+            if (e.button === 0) {
+                isDragging = true; dragStart = { x: e.clientX, y: e.clientY };
+                lastMousePos = { x: e.clientX, y: e.clientY }; wrapper.style.cursor = 'grabbing';
             }
         });
 
         window.addEventListener('mouseup', e => {
-            if (e.button === 0) { // Left Click
-                isDragging = false;
-                wrapper.style.cursor = 'crosshair';
+            if (e.button === 0) {
+                isDragging = false; wrapper.style.cursor = 'crosshair';
                 const dist = Math.hypot(e.clientX - dragStart.x, e.clientY - dragStart.y);
                 if (dist < 5) handleCanvasClick(e);
             }
         });
 
-        // Right Click (Delete)
         wrapper.addEventListener('contextmenu', e => {
             e.preventDefault(); 
             const rect = canvas.getBoundingClientRect();
-            const mouseX = e.clientX - rect.left;
-            const mouseY = e.clientY - rect.top;
-            const hitPoint = getPointAtScreenPos(mouseX, mouseY);
-            
+            const hitPoint = getPointAtScreenPos(e.clientX - rect.left, e.clientY - rect.top);
             if (hitPoint) {
-                // Remove lines connected to this point
                 lines = lines.filter(l => l.p1 !== hitPoint.id && l.p2 !== hitPoint.id);
-                // Remove point
                 points = points.filter(p => p.id !== hitPoint.id);
-                
                 if (selectedPointId === hitPoint.id) selectedPointId = null;
-                
-                updateStatus("Point deleted.", "warning");
-                draw();
+                updateStatus("Point deleted.", "warning"); draw();
             }
         });
 
@@ -591,29 +601,22 @@
             currentMouseY = e.clientY - rect.top;
 
             if (isDragging) {
-                const dx = e.clientX - lastMousePos.x;
-                const dy = e.clientY - lastMousePos.y;
-                offsetX += dx;
-                offsetY += dy;
+                offsetX += e.clientX - lastMousePos.x;
+                offsetY += e.clientY - lastMousePos.y;
                 lastMousePos = { x: e.clientX, y: e.clientY };
-                draw();
-                return;
+                draw(); return;
             }
 
             const hitPoint = getPointAtScreenPos(currentMouseX, currentMouseY);
             if (hitPoint) {
-                hoverPointId = hitPoint.id;
-                hoverLineIndex = null;
-                wrapper.style.cursor = 'pointer';
+                hoverPointId = hitPoint.id; hoverLineIndex = null; wrapper.style.cursor = 'pointer';
             } else {
                 hoverPointId = null;
                 const hitLineIdx = getLineAtScreenPos(currentMouseX, currentMouseY);
                 if (hitLineIdx !== -1) {
-                    hoverLineIndex = hitLineIdx;
-                    wrapper.style.cursor = 'pointer';
+                    hoverLineIndex = hitLineIdx; wrapper.style.cursor = 'pointer';
                 } else {
-                    hoverLineIndex = null;
-                    wrapper.style.cursor = 'crosshair';
+                    hoverLineIndex = null; wrapper.style.cursor = 'crosshair';
                 }
             }
             draw();
@@ -648,9 +651,27 @@
                     lines.splice(hitLineIdx, 1);
                     hoverLineIndex = null;
                     updateStatus("Line removed.");
-                } else if (selectedPointId) {
-                    selectedPointId = null;
-                    updateStatus("Selection cancelled.");
+                } else {
+                    if (selectedPointId) {
+                        selectedPointId = null;
+                        updateStatus("Selection cancelled.");
+                    } else {
+                        // ** CLICK TO ADD CHECK **
+                        if (!clickAddToggle.checked) return; // Prevent addition silently (User preference)
+
+                        const w = screenToWorld(currentMouseX, currentMouseY);
+                        let x = w.x;
+                        let y = w.y;
+                        
+                        if (snapToggle.checked) {
+                            x = Math.round(x);
+                            y = Math.round(y);
+                        } else {
+                            x = parseFloat(x.toFixed(2));
+                            y = parseFloat(y.toFixed(2));
+                        }
+                        addPoint(x, y);
+                    }
                 }
             }
             draw();
