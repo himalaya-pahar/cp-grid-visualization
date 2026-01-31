@@ -167,7 +167,7 @@
         .console-box {
             background: #000; border-left: 3px solid #334155; padding: 10px; border-radius: 6px;
             font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; color: #94a3b8;
-            line-height: 1.4; min-height: 50px; transition: border-color 0.3s, color 0.3s;
+            line-height: 1.6; min-height: 50px; transition: border-color 0.3s, color 0.3s;
         }
         .console-box.active { border-left-color: var(--warning); color: var(--warning); background: rgba(245, 158, 11, 0.05); }
 
@@ -446,8 +446,61 @@
                     ctx.lineTo(s2.x, s2.y);
 
                     if (index === hoverLineIndex) {
-                        ctx.strokeStyle = '#f43f5e'; ctx.lineWidth = 4;
-                        ctx.shadowBlur = 10; ctx.shadowColor = '#f43f5e';
+                        // ** HIGH VISIBILITY HOVER **
+                        ctx.strokeStyle = '#ff2255'; // Bright Neon Red/Pink
+                        ctx.lineWidth = 5; // Thicker
+                        ctx.shadowBlur = 15; 
+                        ctx.shadowColor = '#ff2255'; // Glowing Red
+                        
+                        // --- HOVER TOOLTIP (Solid Texture) ---
+                        const midX = (s1.x + s2.x) / 2;
+                        const midY = (s1.y + s2.y) / 2;
+                        
+                        const dx = Math.abs(p1.x - p2.x);
+                        const dy = Math.abs(p1.y - p2.y);
+                        const mDist = parseFloat((dx + dy).toFixed(4));
+                        const eDist = parseFloat(Math.sqrt(dx*dx + dy*dy).toFixed(4));
+                        
+                        const label1 = `M: ${mDist}`;
+                        const label2 = `E: ${eDist}`;
+                        
+                        ctx.font = 'bold 12px "JetBrains Mono"';
+                        const w1 = ctx.measureText(label1).width;
+                        const w2 = ctx.measureText(label2).width;
+                        const boxW = Math.max(w1, w2) + 20;
+                        const boxH = 40;
+                        
+                        const bx = midX - boxW/2;
+                        const by = midY - 50;
+                        
+                        // 1. Shadow for Box (Depth)
+                        ctx.shadowColor = 'rgba(0,0,0,0.8)';
+                        ctx.shadowBlur = 10;
+
+                        // 2. SOLID Background (Hides grid lines)
+                        ctx.fillStyle = '#1e293b'; // Solid Slate-800
+                        ctx.fillRect(bx, by, boxW, boxH);
+                        
+                        // 3. Border
+                        ctx.strokeStyle = '#38bdf8';
+                        ctx.lineWidth = 1;
+                        ctx.strokeRect(bx, by, boxW, boxH);
+                        
+                        // 4. Reset Shadow for Text
+                        ctx.shadowBlur = 0;
+
+                        // 5. High Contrast Text
+                        ctx.textAlign = 'center';
+                        ctx.textBaseline = 'middle';
+                        
+                        // Label 1: Bright Green/Cyan
+                        ctx.fillStyle = '#22d3ee'; 
+                        ctx.fillText(label1, midX, by + 12);
+                        
+                        // Label 2: Bright Yellow
+                        ctx.fillStyle = '#facc15'; 
+                        ctx.fillText(label2, midX, by + 28);
+                        
                     } else {
                         ctx.strokeStyle = '#38bdf8'; ctx.lineWidth = 3;
                         ctx.shadowBlur = 0; 
@@ -524,7 +577,6 @@
             const inputX = document.getElementById('inputX');
             const inputY = document.getElementById('inputY');
             
-            // ** BLOCKER: Check if addition is allowed **
             if (!clickAddToggle.checked) {
                 updateStatus("⚠ Enable 'Allow Adding Points' to add points!", "warning");
                 return;
@@ -657,7 +709,7 @@
                         updateStatus("Selection cancelled.");
                     } else {
                         // ** CLICK TO ADD CHECK **
-                        if (!clickAddToggle.checked) return; // Prevent addition silently (User preference)
+                        if (!clickAddToggle.checked) return; 
 
                         const w = screenToWorld(currentMouseX, currentMouseY);
                         let x = w.x;
