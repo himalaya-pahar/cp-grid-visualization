@@ -331,6 +331,9 @@
             <br>
             <a href="https://codeforces.com/profile/Himalaya_" target="_blank">• Codeforces</a>
             <div class="version">v1.1</div>
+            <div style="margin-top: 8px; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 5px;">
+        <span style="font-size: 0.7rem; opacity: 0.6;">Total Views: <span id="view-count">...</span></span>
+    </div>
         </div>
     </div>
 
@@ -735,6 +738,21 @@
         }
         
         resize();
+        // --- VIEW COUNTER ---
+    // Using a fresh namespace to ensure it works
+    const namespace = 'cp-viz-tracker'; 
+    const key = 'hits';
+
+    fetch(`https://api.counterapi.dev/v1/${namespace}/${key}/up`)
+        .then(response => response.json())
+        .then(data => {
+            const countElement = document.getElementById('view-count');
+            if(countElement) countElement.innerText = data.count;
+        })
+        .catch(err => {
+            console.log("Counter Error:", err);
+            document.getElementById('view-count').innerText = "1";
+        });
     </script>
 </body>
 </html>
