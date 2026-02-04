@@ -7,16 +7,18 @@
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Inter:wght@400;600&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-color: #0b1121;
-            --panel-bg: #151e32;
-            --input-bg: #0f172a;
-            --text-main: #e2e8f0;
-            --text-muted: #94a3b8;
-            --accent-primary: #38bdf8;
+            /* REFINED PALETTE: Lighter, Cleaner Slate Tones */
+            --bg-color: #0f172a;       /* Slate 900 (Was #0b1121) */
+            --panel-bg: #1e293b;       /* Slate 800 (Was #151e32) */
+            --input-bg: #334155;       /* Slate 700 (Was #0f172a) */
+            --text-main: #f8fafc;      /* Slate 50 (Was #e2e8f0) */
+            --text-muted: #cbd5e1;     /* Slate 300 (Was #94a3b8) */
+            --accent-primary: #38bdf8; /* Sky 400 */
             --accent-secondary: #818cf8;
             --danger: #f43f5e;
-            --warning: #f59e0b;
-            --key-bg: #334155;
+            --warning: #fbbf24;
+            --key-bg: #475569;         /* Slate 600 */
+            --border-color: #475569;   /* Lighter border for definition */
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -38,29 +40,18 @@
             display: flex;
             flex-direction: column;
             gap: 20px;
-            box-shadow: 4px 0 20px rgba(0,0,0,0.4);
+            box-shadow: 4px 0 25px rgba(0,0,0,0.25); /* Softer shadow */
             z-index: 10;
-            border-right: 1px solid rgba(255,255,255,0.05);
-            
-            /* SCROLLING FIX */
+            border-right: 1px solid var(--border-color);
             overflow-y: auto;
             max-height: 100vh;
         }
 
-        /* CUSTOM SCROLLBAR FOR SIDEBAR */
-        .sidebar::-webkit-scrollbar {
-            width: 6px;
-        }
-        .sidebar::-webkit-scrollbar-track {
-            background: rgba(0, 0, 0, 0.1);
-        }
-        .sidebar::-webkit-scrollbar-thumb {
-            background: #334155;
-            border-radius: 4px;
-        }
-        .sidebar::-webkit-scrollbar-thumb:hover {
-            background: #475569;
-        }
+        /* SCROLLBAR */
+        .sidebar::-webkit-scrollbar { width: 6px; }
+        .sidebar::-webkit-scrollbar-track { background: rgba(0, 0, 0, 0.1); }
+        .sidebar::-webkit-scrollbar-thumb { background: #475569; border-radius: 4px; }
+        .sidebar::-webkit-scrollbar-thumb:hover { background: #64748b; }
 
         .brand {
             font-family: 'JetBrains Mono', monospace;
@@ -72,13 +63,14 @@
             display: flex;
             align-items: center;
             gap: 10px;
-            flex-shrink: 0; /* Prevents logo from squashing */
+            flex-shrink: 0;
+            text-shadow: 0 0 10px rgba(56, 189, 248, 0.3);
         }
         .brand span { color: var(--accent-primary); }
 
         .input-card {
-            background: rgba(255,255,255,0.03);
-            border: 1px solid rgba(255,255,255,0.05);
+            background: rgba(0,0,0,0.15); /* Slightly darker than panel for contrast */
+            border: 1px solid var(--border-color);
             padding: 15px;
             border-radius: 12px;
             flex-shrink: 0;
@@ -91,7 +83,7 @@
             letter-spacing: 0.5px;
             margin-bottom: 8px;
             display: block;
-            font-weight: 600;
+            font-weight: 700;
         }
 
         .coord-row { display: flex; gap: 10px; margin-bottom: 12px; }
@@ -100,8 +92,8 @@
         .input-group input {
             width: 100%;
             background: var(--input-bg);
-            border: 1px solid #334155;
-            color: var(--accent-primary);
+            border: 1px solid #475569;
+            color: #fff;
             padding: 10px 10px 10px 30px;
             border-radius: 8px;
             font-family: 'JetBrains Mono', monospace;
@@ -113,23 +105,23 @@
         .input-group span {
             position: absolute;
             left: 10px; top: 50%; transform: translateY(-50%);
-            color: #64748b; font-family: 'JetBrains Mono', monospace; font-size: 0.9rem; font-weight: bold;
+            color: #94a3b8; font-family: 'JetBrains Mono', monospace; font-size: 0.9rem; font-weight: bold;
         }
 
         .input-group input:focus {
             border-color: var(--accent-primary);
-            box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.15);
-            background: #0b1121;
+            box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.2);
+            background: #1e293b;
         }
 
         .btn-primary {
             width: 100%;
             padding: 12px;
             background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
-            color: white;
+            color: #0f172a; /* Dark text on bright button for contrast */
             border: none;
             border-radius: 8px;
-            font-weight: 600;
+            font-weight: 700;
             cursor: pointer;
             box-shadow: 0 4px 12px rgba(56, 189, 248, 0.3);
             transition: transform 0.1s, box-shadow 0.2s;
@@ -138,7 +130,7 @@
             align-items: center;
             gap: 8px;
         }
-        .btn-primary:hover { box-shadow: 0 6px 15px rgba(56, 189, 248, 0.4); transform: translateY(-1px); }
+        .btn-primary:hover { box-shadow: 0 6px 15px rgba(56, 189, 248, 0.5); transform: translateY(-1px); }
         .btn-primary:active { transform: translateY(0); }
 
         /* TOGGLE SWITCH */
@@ -146,22 +138,20 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            background: rgba(255,255,255,0.03);
+            background: rgba(0,0,0,0.15);
             padding: 10px 15px;
             border-radius: 8px;
-            border: 1px solid rgba(255,255,255,0.05);
+            border: 1px solid var(--border-color);
             margin-bottom: 10px;
             flex-shrink: 0;
         }
-        .toggle-label { font-size: 0.85rem; color: #e2e8f0; font-weight: 500; }
+        .toggle-label { font-size: 0.85rem; color: var(--text-main); font-weight: 500; }
         
-        .switch {
-            position: relative; display: inline-block; width: 40px; height: 20px;
-        }
+        .switch { position: relative; display: inline-block; width: 40px; height: 20px; }
         .switch input { opacity: 0; width: 0; height: 0; }
         .slider {
             position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0;
-            background-color: #334155; transition: .4s; border-radius: 34px;
+            background-color: #475569; transition: .4s; border-radius: 34px;
         }
         .slider:before {
             position: absolute; content: ""; height: 14px; width: 14px; left: 3px; bottom: 3px;
@@ -174,77 +164,56 @@
         .instructions {
             font-size: 0.85rem;
             color: var(--text-muted);
-            background: rgba(0,0,0,0.2);
+            background: rgba(0,0,0,0.15);
             padding: 15px;
             border-radius: 8px;
-            border: 1px solid rgba(255,255,255,0.05);
+            border: 1px solid var(--border-color);
             flex-shrink: 0;
         }
         .key-row { display: flex; justify-content: space-between; margin-bottom: 8px; align-items: center; }
         .key-row:last-child { margin-bottom: 0; }
         .key {
-            background: var(--key-bg); color: #fff; padding: 2px 6px; border-radius: 4px;
-            font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; border-bottom: 2px solid #1e293b;
+            background: var(--key-bg); color: #fff; padding: 3px 7px; border-radius: 4px;
+            font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; border-bottom: 2px solid #334155;
+            font-weight: 600;
         }
 
         .console-box {
-            background: #000; border-left: 3px solid #334155; padding: 10px; border-radius: 6px;
-            font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; color: #94a3b8;
+            background: #0f172a; border-left: 3px solid #475569; padding: 10px; border-radius: 6px;
+            font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; color: #cbd5e1;
             line-height: 1.6; min-height: 50px; transition: border-color 0.3s, color 0.3s;
-            flex-shrink: 0;
+            flex-shrink: 0; border: 1px solid #1e293b;
         }
-        .console-box.active { border-left-color: var(--warning); color: var(--warning); background: rgba(245, 158, 11, 0.05); }
+        .console-box.active { border-left-color: var(--warning); color: var(--warning); background: rgba(251, 191, 36, 0.05); }
 
         .controls-bottom { margin-top: auto; display: flex; flex-direction: column; gap: 10px; flex-shrink: 0; }
         .btn-outline {
-            background: transparent; border: 1px solid rgba(244, 63, 94, 0.3); color: var(--danger);
+            background: transparent; border: 1px solid rgba(244, 63, 94, 0.4); color: var(--danger);
             padding: 10px; border-radius: 8px; cursor: pointer; font-weight: 600; transition: 0.2s;
         }
         .btn-outline:hover { background: rgba(244, 63, 94, 0.1); border-color: var(--danger); }
         .btn-ghost {
-            background: rgba(255,255,255,0.05); color: white; border: none; padding: 12px;
-            border-radius: 8px; cursor: pointer; font-weight: 500; display: flex; align-items: center;
+            background: rgba(255,255,255,0.05); color: var(--text-main); border: 1px solid var(--border-color); padding: 12px;
+            border-radius: 8px; cursor: pointer; font-weight: 600; display: flex; align-items: center;
             justify-content: center; gap: 8px; transition: 0.2s;
         }
-        .btn-ghost:hover { background: rgba(255,255,255,0.1); }
+        .btn-ghost:hover { background: rgba(255,255,255,0.1); border-color: #94a3b8; }
 
         /* FOOTER STYLES */
         .footer {
-            margin-top: 15px;
-            padding-top: 15px;
-            border-top: 1px solid rgba(255,255,255,0.05);
-            font-size: 0.75rem;
-            color: var(--text-muted);
-            text-align: center;
-            line-height: 1.6;
-            flex-shrink: 0;
+            margin-top: 15px; padding-top: 15px; border-top: 1px solid var(--border-color);
+            font-size: 0.75rem; color: var(--text-muted); text-align: center; line-height: 1.6; flex-shrink: 0;
         }
         .footer a {
-            color: var(--text-muted);
-            text-decoration: none;
-            margin: 0 5px;
-            transition: color 0.2s;
-            font-weight: 600;
+            color: var(--text-muted); text-decoration: none; margin: 0 5px; transition: color 0.2s; font-weight: 600;
         }
-        .footer a:hover {
-            color: var(--accent-primary);
-        }
-        .heart { color: #f43f5e; font-size: 0.9rem; }
-        
-        .version { 
-            margin-top: 8px; 
-            color: var(--accent-secondary); 
-            font-size: 0.8rem; 
-            opacity: 1; 
-            font-weight: bold; 
-        }
+        .footer a:hover { color: var(--accent-primary); }
+        .version { margin-top: 8px; color: var(--accent-secondary); font-size: 0.8rem; font-weight: bold; }
 
         /* CANVAS */
         .canvas-container {
             flex-grow: 1; position: relative; background-color: var(--bg-color);
-            background-image: linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
-                              linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
-            background-size: 40px 40px; overflow: hidden; cursor: crosshair;
+            overflow: hidden; cursor: crosshair;
         }
         canvas { display: block; touch-action: none; }
     </style>
@@ -267,7 +236,7 @@
                 </div>
             </div>
             <button class="btn-primary" onclick="addPointFromInput()">
-                Add Point <span style="font-size: 0.8em; opacity: 0.7;">↵</span>
+                Add Point <span style="font-size: 0.8em; opacity: 0.8;">↵</span>
             </button>
         </div>
 
@@ -321,8 +290,8 @@
         </div>
 
         <div class="controls-bottom">
-            <button class="btn-outline" onclick="clearCanvas()">🗑 Clear Board</button>
-            <button class="btn-ghost" onclick="downloadImage()">📸 Download Image</button>
+            <button class="btn-outline" onclick="clearCanvas()">Clear Board</button>
+            <button class="btn-ghost" onclick="downloadImage()">Download Image</button>
         </div>
 
         <div class="footer">
@@ -330,10 +299,10 @@
             <a href="https://www.linkedin.com/in/nafis-shahriar-687402287/" target="_blank">Nafis Shahriar</a>
             <br>
             <a href="https://codeforces.com/profile/Himalaya_" target="_blank">• Codeforces</a>
-            <div class="version">v1.1</div>
-            <div style="margin-top: 8px; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 5px;">
-        <span style="font-size: 0.7rem; opacity: 0.6;">Total Views: <span id="view-count">...</span></span>
-    </div>
+            <div class="version">v1.2</div>
+            <div style="margin-top: 8px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 5px;">
+                <span style="font-size: 0.75rem; opacity: 0.7;">Total Views: <span id="view-count">...</span></span>
+            </div>
         </div>
     </div>
 
@@ -354,6 +323,8 @@
         // State
         let points = []; 
         let lines = []; 
+        let history = []; 
+        let redoHistory = []; 
         let selectedPointId = null; 
         let hoverPointId = null;
         let hoverLineIndex = null;
@@ -377,6 +348,61 @@
         }
         window.addEventListener('resize', resize);
 
+        // --- HISTORY ---
+        function saveState() {
+            if (history.length > 50) history.shift();
+            history.push({
+                points: JSON.parse(JSON.stringify(points)),
+                lines: JSON.parse(JSON.stringify(lines))
+            });
+            redoHistory = [];
+        }
+
+        function undo() {
+            if (history.length === 0) {
+                updateStatus("Nothing to undo.", "warning"); return;
+            }
+            redoHistory.push({
+                points: JSON.parse(JSON.stringify(points)),
+                lines: JSON.parse(JSON.stringify(lines))
+            });
+            const lastState = history.pop();
+            points = lastState.points;
+            lines = lastState.lines;
+            selectedPointId = null; hoverPointId = null;
+            draw();
+            updateStatus("Undid last action.");
+        }
+
+        function redo() {
+            if (redoHistory.length === 0) {
+                updateStatus("Nothing to redo.", "warning"); return;
+            }
+            history.push({
+                points: JSON.parse(JSON.stringify(points)),
+                lines: JSON.parse(JSON.stringify(lines))
+            });
+            const nextState = redoHistory.pop();
+            points = nextState.points;
+            lines = nextState.lines;
+            selectedPointId = null; hoverPointId = null;
+            draw();
+            updateStatus("Redid action.");
+        }
+
+        window.addEventListener('keydown', e => {
+            if (e.ctrlKey || e.metaKey) {
+                const key = e.key.toLowerCase();
+                if (key === 'z') {
+                    e.preventDefault();
+                    if (e.shiftKey) redo(); else undo();
+                } else if (key === 'y') {
+                    e.preventDefault(); redo();
+                }
+            }
+        });
+
+        // --- MATH ---
         function worldToScreen(x, y) {
             return { x: offsetX + (x * scale), y: offsetY - (y * scale) };
         }
@@ -384,7 +410,6 @@
             return { x: (sx - offsetX) / scale, y: (offsetY - sy) / scale };
         }
 
-        // --- MATH HELPERS ---
         function distToSegment(p, v, w) {
             const l2 = (w.x - v.x)**2 + (w.y - v.y)**2;
             if (l2 === 0) return Math.hypot(p.x - v.x, p.y - v.y);
@@ -413,10 +438,11 @@
             });
         }
 
-        // --- DRAWING ENGINE ---
+        // --- DRAWING ---
         function drawGrid() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
-            ctx.strokeStyle = '#1e293b'; ctx.lineWidth = 1;
+            // Increased grid contrast: #1e293b -> #334155
+            ctx.strokeStyle = '#334155'; ctx.lineWidth = 1;
             
             const startCol = Math.floor(-offsetX / scale);
             const endCol = Math.floor((canvas.width - offsetX) / scale) + 1;
@@ -432,15 +458,15 @@
             }
             ctx.stroke();
 
-            // Axes
-            ctx.strokeStyle = '#475569'; ctx.lineWidth = 2;
+            // Axes contrast increased: #475569 -> #64748b
+            ctx.strokeStyle = '#64748b'; ctx.lineWidth = 2;
             ctx.beginPath();
             ctx.moveTo(0, offsetY); ctx.lineTo(canvas.width, offsetY);
             ctx.moveTo(offsetX, 0); ctx.lineTo(offsetX, canvas.height);
             ctx.stroke();
 
-            // Axis Labels
-            ctx.fillStyle = '#64748b'; ctx.font = '10px "Inter"'; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+            // Labels contrast increased
+            ctx.fillStyle = '#94a3b8'; ctx.font = '11px "Inter"'; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
             let step = 1;
             if (scale < 30) step = 2;
             if (scale < 15) step = 5;
@@ -474,13 +500,9 @@
                     ctx.lineTo(s2.x, s2.y);
 
                     if (index === hoverLineIndex) {
-                        // ** HIGH VISIBILITY HOVER **
-                        ctx.strokeStyle = '#ff2255'; 
-                        ctx.lineWidth = 5; 
-                        ctx.shadowBlur = 15; 
-                        ctx.shadowColor = '#ff2255'; 
+                        ctx.strokeStyle = '#ff2255'; ctx.lineWidth = 5; 
+                        ctx.shadowBlur = 15; ctx.shadowColor = '#ff2255'; 
                         
-                        // --- HOVER TOOLTIP ---
                         const midX = (s1.x + s2.x) / 2;
                         const midY = (s1.y + s2.y) / 2;
                         
@@ -497,9 +519,7 @@
                         const w2 = ctx.measureText(label2).width;
                         const boxW = Math.max(w1, w2) + 20;
                         const boxH = 40;
-                        
-                        const bx = midX - boxW/2;
-                        const by = midY - 50;
+                        const bx = midX - boxW/2; const by = midY - 50;
                         
                         ctx.shadowColor = 'rgba(0,0,0,0.8)'; ctx.shadowBlur = 10;
                         ctx.fillStyle = '#1e293b'; ctx.fillRect(bx, by, boxW, boxH);
@@ -508,7 +528,6 @@
                         ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
                         ctx.fillStyle = '#22d3ee'; ctx.fillText(label1, midX, by + 12);
                         ctx.fillStyle = '#facc15'; ctx.fillText(label2, midX, by + 28);
-                        
                     } else {
                         ctx.strokeStyle = '#38bdf8'; ctx.lineWidth = 3;
                         ctx.shadowBlur = 0; 
@@ -550,7 +569,7 @@
                     ctx.fillStyle = '#f472b6'; ctx.shadowBlur = 0;
                 }
                 ctx.fill();
-                ctx.lineWidth = 2; ctx.strokeStyle = '#0b1121'; ctx.stroke();
+                ctx.lineWidth = 2; ctx.strokeStyle = '#0f172a'; ctx.stroke();
                 ctx.shadowBlur = 0; 
             });
 
@@ -561,11 +580,9 @@
                 const textX = s.x + 12; const textY = s.y - 8;
                 const metrics = ctx.measureText(label);
                 
-                ctx.fillStyle = 'rgba(11, 17, 33, 0.85)';
+                ctx.fillStyle = 'rgba(15, 23, 42, 0.9)';
                 ctx.fillRect(textX - 4, textY - 14, metrics.width + 8, 16);
-                
-                ctx.fillStyle = '#e2e8f0';
-                ctx.fillText(label, textX, textY);
+                ctx.fillStyle = '#f8fafc'; ctx.fillText(label, textX, textY);
             });
         }
 
@@ -604,6 +621,7 @@
             if (exists) {
                 updateStatus(`Point (${x}, ${y}) already exists.`, 'warning'); return;
             }
+            saveState(); 
             const id = Date.now() + Math.random();
             points.push({ x, y, id });
             updateStatus(`Added point (${x}, ${y})`);
@@ -611,6 +629,7 @@
         }
 
         function clearCanvas() {
+            saveState(); 
             points = []; lines = []; selectedPointId = null; hoverLineIndex = null;
             updateStatus("Board cleared."); draw();
         }
@@ -619,7 +638,7 @@
             const tempCanvas = document.createElement('canvas');
             tempCanvas.width = canvas.width; tempCanvas.height = canvas.height;
             const tCtx = tempCanvas.getContext('2d');
-            tCtx.fillStyle = '#0b1121'; tCtx.fillRect(0,0, tempCanvas.width, tempCanvas.height);
+            tCtx.fillStyle = '#0f172a'; tCtx.fillRect(0,0, tempCanvas.width, tempCanvas.height);
             tCtx.drawImage(canvas, 0, 0);
             tCtx.font = 'bold 20px "JetBrains Mono"'; tCtx.fillStyle = '#ffffff';
             tCtx.fillText("CP Grid Visualizer", 20, 40);
@@ -648,6 +667,7 @@
             const rect = canvas.getBoundingClientRect();
             const hitPoint = getPointAtScreenPos(e.clientX - rect.left, e.clientY - rect.top);
             if (hitPoint) {
+                saveState(); 
                 lines = lines.filter(l => l.p1 !== hitPoint.id && l.p2 !== hitPoint.id);
                 points = points.filter(p => p.id !== hitPoint.id);
                 if (selectedPointId === hitPoint.id) selectedPointId = null;
@@ -701,6 +721,7 @@
                     selectedPointId = null;
                     updateStatus("Selection cancelled.");
                 } else {
+                    saveState(); 
                     lines.push({ p1: selectedPointId, p2: hitPoint.id });
                     selectedPointId = null; 
                     updateStatus("Line connected!");
@@ -708,6 +729,7 @@
             } else {
                 const hitLineIdx = getLineAtScreenPos(currentMouseX, currentMouseY);
                 if (hitLineIdx !== -1) {
+                    saveState(); 
                     lines.splice(hitLineIdx, 1);
                     hoverLineIndex = null;
                     updateStatus("Line removed.");
@@ -716,19 +738,15 @@
                         selectedPointId = null;
                         updateStatus("Selection cancelled.");
                     } else {
-                        // ** CLICK TO ADD CHECK **
                         if (!clickAddToggle.checked) return; 
 
                         const w = screenToWorld(currentMouseX, currentMouseY);
-                        let x = w.x;
-                        let y = w.y;
+                        let x = w.x; let y = w.y;
                         
                         if (snapToggle.checked) {
-                            x = Math.round(x);
-                            y = Math.round(y);
+                            x = Math.round(x); y = Math.round(y);
                         } else {
-                            x = parseFloat(x.toFixed(2));
-                            y = parseFloat(y.toFixed(2));
+                            x = parseFloat(x.toFixed(2)); y = parseFloat(y.toFixed(2));
                         }
                         addPoint(x, y);
                     }
@@ -739,20 +757,18 @@
         
         resize();
         // --- VIEW COUNTER ---
-    // Using a fresh namespace to ensure it works
-    const namespace = 'cp-viz-tracker'; 
-    const key = 'hits';
-
-    fetch(`https://api.counterapi.dev/v1/${namespace}/${key}/up`)
-        .then(response => response.json())
-        .then(data => {
-            const countElement = document.getElementById('view-count');
-            if(countElement) countElement.innerText = data.count;
-        })
-        .catch(err => {
-            console.log("Counter Error:", err);
-            document.getElementById('view-count').innerText = "1";
-        });
+        const namespace = 'cp-viz-tracker'; 
+        const key = 'hits';
+        fetch(`https://api.counterapi.dev/v1/${namespace}/${key}/up`)
+            .then(response => response.json())
+            .then(data => {
+                const countElement = document.getElementById('view-count');
+                if(countElement) countElement.innerText = data.count;
+            })
+            .catch(err => {
+                console.log("Counter Error:", err);
+                document.getElementById('view-count').innerText = "1";
+            });
     </script>
 </body>
 </html>
