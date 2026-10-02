@@ -1,4 +1,4 @@
-# ⚡ CP Grid Visualizer
+# CP Grid Visualizer
 
 An interactive 2D coordinate grid and geometry visualization tool built for competitive programmers, algorithm enthusiasts, and problem solvers to quickly test, sketch, and inspect 2D geometry problems, Manhattan/Euclidean distances, and point-line configurations.
 
@@ -6,55 +6,55 @@ Live Demo: [https://himalaya-pahar.github.io/cp-grid-visualization/](https://him
 
 ---
 
-## 🚀 Overview
+## Overview
 
 Competitive programming problems often involve coordinate grids, Manhattan distances, point sets, and geometric paths. **CP Grid Visualizer** provides an instant, zero-setup interactive canvas where you can plot points, connect paths, paste test cases in bulk, and inspect distances in real time.
 
 ---
 
-## ✨ Features
+## Features
 
-- 🎯 **Interactive Canvas Plotting**
+- **Interactive Canvas Plotting**
   - Click anywhere on the grid to drop a point.
   - Chain points into paths by selecting a point and clicking subsequent locations.
   - Temporary dashed indicator while extending chains.
 
-- 📏 **Instant Distance Inspection**
+- **Instant Distance Inspection**
   - Hover over any line segment to see both:
     - **Manhattan Distance ($M$)**: $|x_1 - x_2| + |y_1 - y_2|$
     - **Euclidean Distance ($E$)**: $\sqrt{(x_1 - x_2)^2 + (y_1 - y_2)^2}$
   - Displayed in a high-contrast HUD tooltip with glowing highlight.
 
-- 📋 **Bulk Input Mode**
+- **Bulk Input Mode**
   - Paste lists of coordinate pairs ($X\ Y$ separated by spaces or newlines) directly from problem statements or sample inputs to plot them simultaneously.
 
-- 🔍 **Smooth Pan & Adaptive Zoom**
+- **Smooth Pan & Adaptive Zoom**
   - Drag to pan across an infinite coordinate space.
   - Mouse wheel to zoom in/out with dynamically adjusting grid tick marks ($1, 2, 5, 10, 20$).
 
-- 🔒 **Read-Only / Inspection Mode**
+- **Read-Only / Inspection Mode**
   - Switch to Read-Only mode to inspect coordinates and explore complex graphs without accidentally adding points or lines.
 
-- 🧲 **Snap to Grid**
+- **Snap to Grid**
   - Toggle between strict integer coordinates (ideal for discrete CP grids) and 2-decimal floating point precision.
 
-- ↩️ **Full Undo & Redo**
+- **Full Undo & Redo**
   - Undo and redo history up to 50 operations (`Ctrl+Z`, `Ctrl+Shift+Z` / `Ctrl+Y`).
 
-- 🗑️ **Contextual Deletion**
+- **Contextual Deletion**
   - Right-click any point or line segment to instantly remove it.
   - Cancel selection with `Right-Click` or `Esc`.
 
-- 📸 **Export to Image**
+- **Export to Image**
   - One-click export to PNG (`cp-grid-visualizer.png`) with crisp dark-themed styling and watermark.
 
-- 📱 **Collapsible Sidebar & Modern Dark UI**
+- **Collapsible Sidebar & Modern Dark UI**
   - Toggleable sidebar for an unobstructed full-screen canvas view.
   - Built with high-contrast neon accents, JetBrains Mono, and Inter typography.
 
 ---
 
-## ⌨️ Controls & Shortcuts
+## Controls & Shortcuts
 
 | Action | Control / Shortcut |
 |---|---|
@@ -72,7 +72,7 @@ Competitive programming problems often involve coordinate grids, Manhattan dista
 
 ---
 
-## 🛠️ Tech Stack
+## Tech Stack
 
 - **Core**: Vanilla HTML5, CSS3, JavaScript (Canvas 2D API)
 - **Typography**: [JetBrains Mono](https://fonts.google.com/specimen/JetBrains+Mono) & [Inter](https://fonts.google.com/specimen/Inter)
@@ -80,7 +80,7 @@ Competitive programming problems often involve coordinate grids, Manhattan dista
 
 ---
 
-## 🏁 Getting Started
+## Getting Started
 
 ### Option 1: Direct File Open
 Simply double-click `index.html` or open it with your favorite browser:
@@ -105,7 +105,7 @@ Then navigate to `http://localhost:8000` in your browser.
 
 ---
 
-## 👤 Author
+## Author
 
 **Nafis Shahriar**
 - LinkedIn: [nafis-shahriar-687402287](https://www.linkedin.com/in/nafis-shahriar-687402287/)
